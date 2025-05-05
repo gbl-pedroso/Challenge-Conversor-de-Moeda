@@ -1,3 +1,5 @@
+package config;
+
 public class ExchangeRateConfig {
 
     private static final String API_KEY = System.getenv("EXCHANGERATE_API_KEY");
