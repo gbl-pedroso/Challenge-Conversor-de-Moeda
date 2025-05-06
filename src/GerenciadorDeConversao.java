@@ -1,4 +1,4 @@
-import Exceptions.ConnectionApiFailException;
+import exceptions.ConnectionApiFailException;
 import com.google.gson.Gson;
 import dto.Moeda;
 
@@ -25,6 +25,8 @@ public class GerenciadorDeConversao {
                 throw new ConnectionApiFailException("Erro ao se conectar com a API do ExchangeRate");
             }
             Gson gson = new Gson();
+
+
             return gson.fromJson(response.body(), Moeda.class);
 
         } catch (ConnectionApiFailException | IOException | InterruptedException e) {

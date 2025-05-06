@@ -1,4 +1,5 @@
 package dto;
 
-public record Moeda(String base_code, String target_code, Double conversion_result ) {
+public record Moeda(String base_code, String target_code, String conversion_result ) {
 }
+

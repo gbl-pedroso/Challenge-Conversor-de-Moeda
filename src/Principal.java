@@ -1,5 +1,6 @@
 
 import config.ExchangeRateConfig;
+import enums.CodeMoedas;
 
 import java.util.Scanner;
 
@@ -8,6 +9,8 @@ public class Principal {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String apikey = ExchangeRateConfig.getApiKey();
+
+
 
         /*System.out.println("********************************************\n" +
                 "Seja bem vindo ao conversor de moedas\n\n" +
@@ -21,14 +24,13 @@ public class Principal {
                 "Escolha uma opção valida:\n" +
                 "********************************************\n");*/
 
-
         int opcaoEscolhida = sc.nextInt();
 
         System.out.println("Digite o valor que deseja converter: ");
-        double valorParaConverter = sc.nextDouble();
+        float valorParaConverter = sc.nextFloat();
 
 
-        String endereco = String.format("https://v6.exchangerate-api.com/v6/%s/pair/BRL/USD/?amount=%.2f", apikey, valorParaConverter);
+        String endereco = String.format("https://v6.exchangerate-api.com/v6/%s/pair/BRL/USD/?amount=%s", apikey,valorParaConverter);
 
         GerenciadorDeConversao gerencia = new GerenciadorDeConversao();
 
