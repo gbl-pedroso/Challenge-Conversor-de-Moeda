@@ -1,5 +1,7 @@
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import config.ExchangeRateConfig;
 import dto.MoedaDTO;
 import enums.CodeMoedas;
@@ -64,6 +66,7 @@ public class Principal {
         System.out.println("Digite o valor que deseja converter: ");
         double valorParaConversao = sc.nextDouble();
         String endPoint = String.format("https://v6.exchangerate-api.com/v6/%s/pair/%s/%s/?amount=%s", apikey, base, alvo, valorParaConversao);
+
 
 
         MoedaDTO dto = gerencia.buscaConversao(endPoint);
