@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.core.JsonParser;
+import com.google.gson.Gson;
 import config.ExchangeRateConfig;
 import dto.MoedaDTO;
 import enums.CodeMoedas;
@@ -13,6 +15,10 @@ public class Principal {
 
         System.out.println(MENU);
         int opcaoEscolhida = sc.nextInt();
+
+
+
+
 
         while (opcaoEscolhida < 1 || opcaoEscolhida > 7) {
             System.out.println("Opção invalida, por favor escolha novamente a opção");
@@ -58,9 +64,11 @@ public class Principal {
         System.out.println("Digite o valor que deseja converter: ");
         double valorParaConversao = sc.nextDouble();
         String endPoint = String.format("https://v6.exchangerate-api.com/v6/%s/pair/%s/%s/?amount=%s", apikey, base, alvo, valorParaConversao);
+
+
         MoedaDTO dto = gerencia.buscaConversao(endPoint);
 
-        System.out.printf("Valor %s [%s] corresponde ao valor final de =>>> %f [%s]\n\n", valorParaConversao, dto.base_code(), dto.conversion_result(), dto.target_code());
+        System.out.printf("Valor %s [%s] corresponde ao valor final de =>>> %f [%s]\n\n", valorParaConversao, dto.baseCode(), dto.conversionResult(), dto.targetCode());
 
 
     }

@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
 import dto.MoedaDTO;
 import exceptions.ConnectionApiFailException;
 import com.google.gson.Gson;
@@ -7,7 +9,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-
+import com.fasterxml.jackson.core.*;
 public class GerenciadorDeConversao {
 
 
@@ -22,8 +24,9 @@ public class GerenciadorDeConversao {
 
                 throw new ConnectionApiFailException("Erro ao se conectar com a API do ExchangeRate");
             }
-            Gson gson = new Gson();
-            return gson.fromJson(response.body(), MoedaDTO.class);
+            ObjectMapper mapper = new ObjectMapper();
+
+            return mapper.readValue(response.body(), MoedaDTO.class);
 
         } catch (IOException | InterruptedException e) {
            throw new RuntimeException("Erro Inesperado: " + e.getMessage());
