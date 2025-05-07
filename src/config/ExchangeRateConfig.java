@@ -7,7 +7,7 @@ public class ExchangeRateConfig {
 
     public static String getApiKey() {
         if (API_KEY == null || API_KEY.isEmpty()) {
-            throw new IllegalStateException("Chave da API da OpenAI não configurada. Configure a variável de ambiente OPENAI_API_KEY.");
+            throw new IllegalStateException("Chave da API do ExchangeRate não configurada. Configure a variável de ambiente EXCHANGERATE_API_KEY.");
         }
         return API_KEY;
     }

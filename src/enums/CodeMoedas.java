@@ -173,4 +173,10 @@ public enum CodeMoedas {
 
         this.descricao = s;
     }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+
 }
