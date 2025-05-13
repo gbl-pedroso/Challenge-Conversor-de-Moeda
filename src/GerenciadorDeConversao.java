@@ -12,9 +12,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.core.*;
 public class GerenciadorDeConversao {
-
+    List<MoedaDTO> registroDeConversao = new ArrayList<>();
 
     public MoedaDTO buscaConversao(String endereco) {
 
@@ -34,15 +38,15 @@ public class GerenciadorDeConversao {
             String targetCode = jsonObject.get("target_code").getAsString();
             double conversionResult = jsonObject.get("conversion_result").getAsDouble();
 
+            MoedaDTO moedaDTO = new MoedaDTO(baseCode, targetCode, conversionResult, LocalDateTime.now());
 
+            registroDeConversao.add(moedaDTO);
 
-
-            return new MoedaDTO(baseCode,targetCode,conversionResult);
-
+            return moedaDTO;
 
 
         } catch (IOException | InterruptedException e) {
-           throw new RuntimeException("Erro Inesperado: " + e.getMessage());
+            throw new RuntimeException("Erro Inesperado: " + e.getMessage());
         }
 
     }

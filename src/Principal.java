@@ -6,6 +6,10 @@ import config.ExchangeRateConfig;
 import dto.MoedaDTO;
 import enums.CodeMoedas;
 import exceptions.ConnectionApiFailException;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Principal {
@@ -14,40 +18,78 @@ public class Principal {
         Scanner sc = new Scanner(System.in);
         String apikey = ExchangeRateConfig.getApiKey();
         GerenciadorDeConversao gerencia = new GerenciadorDeConversao();
+        List<MoedaDTO> historico = new ArrayList<>();
 
         System.out.println(MENU);
         int opcaoEscolhida = sc.nextInt();
 
 
-
-
-
-        while (opcaoEscolhida < 1 || opcaoEscolhida > 7) {
+        while (opcaoEscolhida < 1 || opcaoEscolhida > 9) {
             System.out.println("Opção invalida, por favor escolha novamente a opção");
             opcaoEscolhida = sc.nextInt();
         }
 
         try {
-            while (opcaoEscolhida != 7) {
+            while (opcaoEscolhida != 9) {
 
                 switch (opcaoEscolhida) {
-                    case 1: geraSaida(sc, apikey, CodeMoedas.USD.toString(), CodeMoedas.ARS.toString(), gerencia);
-                    break;
+                    case 1:
+                        geraSaida(sc, apikey, CodeMoedas.USD.toString(), CodeMoedas.ARS.toString(), gerencia, historico);
+                        break;
 
-                    case 2: geraSaida(sc, apikey, CodeMoedas.ARS.toString(), CodeMoedas.USD.toString(), gerencia);
-                    break;
+                    case 2:
+                        geraSaida(sc, apikey, CodeMoedas.ARS.toString(), CodeMoedas.USD.toString(), gerencia, historico);
+                        break;
 
-                    case 3: geraSaida(sc, apikey, CodeMoedas.USD.toString(), CodeMoedas.BRL.toString(), gerencia);
-                    break;
+                    case 3:
+                        geraSaida(sc, apikey, CodeMoedas.USD.toString(), CodeMoedas.BRL.toString(), gerencia, historico);
+                        break;
 
-                    case 4: geraSaida(sc, apikey, CodeMoedas.BRL.toString(), CodeMoedas.USD.toString(), gerencia);
-                    break;
+                    case 4:
+                        geraSaida(sc, apikey, CodeMoedas.BRL.toString(), CodeMoedas.USD.toString(), gerencia, historico);
+                        break;
 
-                    case 5: geraSaida(sc, apikey, CodeMoedas.COP.toString(), CodeMoedas.USD.toString(), gerencia);
-                    break;
+                    case 5:
+                        geraSaida(sc, apikey, CodeMoedas.COP.toString(), CodeMoedas.USD.toString(), gerencia, historico);
+                        break;
 
-                    case 6: geraSaida(sc, apikey, CodeMoedas.USD.toString(), CodeMoedas.COP.toString(), gerencia);
-                    break;
+                    case 6:
+                        geraSaida(sc, apikey, CodeMoedas.USD.toString(), CodeMoedas.COP.toString(), gerencia, historico);
+                        break;
+
+                    case 7:
+                        System.out.println("Digite a sigla da Moeda de origem: ");
+                        String siglaMoedaOrigem = sc.next();
+                        while(!moedaValida(siglaMoedaOrigem)){
+                            System.out.println("sigla invalida, por favor digite uma sigla valida");
+                            siglaMoedaOrigem = sc.next();
+                        }
+
+                        System.out.println("Digite a sigla da Moeda para conversão: ");
+                        String siglaMoedaConversao = sc.next();
+
+                        while(!moedaValida(siglaMoedaConversao)){
+                            System.out.println("sigla invalida, por favor digite uma sigla valida");
+                            siglaMoedaConversao = sc.next();
+                        }
+                        geraSaida(sc, apikey, siglaMoedaOrigem, siglaMoedaConversao, gerencia, historico);
+                        break;
+
+                    case 8:
+                        System.out.println("Historico de conversões: ");
+                        if (historico.isEmpty()) {
+                            System.out.println("Esta lista ainda está vazia");
+                        } else {
+                            for (MoedaDTO moeda : historico) {
+                                System.out.printf(
+                                        "Moeda %s convertida para %s | Valor: %.2f [%s]%n",
+                                        moeda.baseCode(),
+                                        moeda.targetCode(),
+                                        moeda.conversionResult(),
+                                        moeda.dataHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
+                                );
+                            }
+                        }
                 }
 
                 System.out.println(MENU);
@@ -62,19 +104,30 @@ public class Principal {
     }
 
 
-    public static void geraSaida(Scanner sc, String apikey, String base, String alvo, GerenciadorDeConversao gerencia) {
+    public static void geraSaida(Scanner sc, String apikey, String base, String alvo, GerenciadorDeConversao gerencia, List<MoedaDTO> list) {
         System.out.println("Digite o valor que deseja converter: ");
         double valorParaConversao = sc.nextDouble();
         String endPoint = String.format("https://v6.exchangerate-api.com/v6/%s/pair/%s/%s/?amount=%s", apikey, base, alvo, valorParaConversao);
 
 
-
         MoedaDTO dto = gerencia.buscaConversao(endPoint);
+        list.add(dto);
 
         System.out.printf("Valor %s [%s] corresponde ao valor final de =>>> %f [%s]\n\n", valorParaConversao, dto.baseCode(), dto.conversionResult(), dto.targetCode());
 
 
     }
+
+    public static boolean moedaValida(String codigo) {
+        for (CodeMoedas moeda : CodeMoedas.values()) {
+            if (moeda.name().equalsIgnoreCase(codigo)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 
     private static final String MENU = """
             ********************************************
@@ -86,7 +139,9 @@ public class Principal {
             4) Real Brasileiro => Dolar
             5) Dolar => Peso Colombiano
             6) Peso Colombiano => Dolar
-            7) Sair
+            7) Escolher Moedas para Conversão
+            8) Exibir Registro de Conversões
+            9) Sair
             Escolha uma opção válida:
             ********************************************
             """;
