@@ -9,6 +9,7 @@ import exceptions.ConnectionApiFailException;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,9 +20,11 @@ public class Principal {
         String apikey = ExchangeRateConfig.getApiKey();
         GerenciadorDeConversao gerencia = new GerenciadorDeConversao();
         List<MoedaDTO> historico = new ArrayList<>();
-
-        System.out.println(MENU);
-        int opcaoEscolhida = sc.nextInt();
+        String letras = "abcdefghijklmnopqrstuvxwyz";
+        int opcaoEscolhida=0;
+        try {
+            System.out.println(MENU);
+            opcaoEscolhida = sc.nextInt();
 
 
         while (opcaoEscolhida < 1 || opcaoEscolhida > 9) {
@@ -29,7 +32,7 @@ public class Principal {
             opcaoEscolhida = sc.nextInt();
         }
 
-        try {
+
             while (opcaoEscolhida != 9) {
 
                 switch (opcaoEscolhida) {
@@ -60,7 +63,7 @@ public class Principal {
                     case 7:
                         System.out.println("Digite a sigla da Moeda de origem: ");
                         String siglaMoedaOrigem = sc.next();
-                        while(!moedaValida(siglaMoedaOrigem)){
+                        while (!moedaValida(siglaMoedaOrigem)) {
                             System.out.println("sigla invalida, por favor digite uma sigla valida");
                             siglaMoedaOrigem = sc.next();
                         }
@@ -68,7 +71,7 @@ public class Principal {
                         System.out.println("Digite a sigla da Moeda para conversão: ");
                         String siglaMoedaConversao = sc.next();
 
-                        while(!moedaValida(siglaMoedaConversao)){
+                        while (moedaValida(siglaMoedaConversao)) {
                             System.out.println("sigla invalida, por favor digite uma sigla valida");
                             siglaMoedaConversao = sc.next();
                         }
@@ -98,6 +101,9 @@ public class Principal {
             }
         } catch (ConnectionApiFailException e) {
             System.out.println("Erro ao se conectar com a API");
+        }catch (InputMismatchException e){
+            System.out.println("Erro: Opção invalida!! programa será encerrado.");
+
         }
 
         System.out.println("Obrigado por usar o conversor de Moedas! Volte sempre!");
@@ -126,7 +132,6 @@ public class Principal {
         }
         return false;
     }
-
 
 
     private static final String MENU = """
