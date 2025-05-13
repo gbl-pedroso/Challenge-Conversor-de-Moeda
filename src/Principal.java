@@ -1,17 +1,10 @@
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import config.ExchangeRateConfig;
 import dto.MoedaDTO;
 import enums.CodeMoedas;
 import exceptions.ConnectionApiFailException;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Principal {
 
@@ -20,11 +13,11 @@ public class Principal {
         String apikey = ExchangeRateConfig.getApiKey();
         GerenciadorDeConversao gerencia = new GerenciadorDeConversao();
         List<MoedaDTO> historico = new ArrayList<>();
-        String letras = "abcdefghijklmnopqrstuvxwyz";
-        int opcaoEscolhida=0;
+
+
         try {
             System.out.println(MENU);
-            opcaoEscolhida = sc.nextInt();
+            int opcaoEscolhida = sc.nextInt();
 
 
         while (opcaoEscolhida < 1 || opcaoEscolhida > 9) {
@@ -63,8 +56,8 @@ public class Principal {
                     case 7:
                         System.out.println("Digite a sigla da Moeda de origem: ");
                         String siglaMoedaOrigem = sc.next();
-                        while (!moedaValida(siglaMoedaOrigem)) {
-                            System.out.println("sigla invalida, por favor digite uma sigla valida");
+                        while (moedaValida(siglaMoedaOrigem)) {
+                            System.out.println("Sigla invalida, por favor digite uma sigla valida");
                             siglaMoedaOrigem = sc.next();
                         }
 
@@ -72,7 +65,7 @@ public class Principal {
                         String siglaMoedaConversao = sc.next();
 
                         while (moedaValida(siglaMoedaConversao)) {
-                            System.out.println("sigla invalida, por favor digite uma sigla valida");
+                            System.out.println("Sigla invalida, por favor digite uma sigla valida");
                             siglaMoedaConversao = sc.next();
                         }
                         geraSaida(sc, apikey, siglaMoedaOrigem, siglaMoedaConversao, gerencia, historico);
@@ -81,7 +74,7 @@ public class Principal {
                     case 8:
                         System.out.println("Historico de conversões: ");
                         if (historico.isEmpty()) {
-                            System.out.println("Esta lista ainda está vazia");
+                            System.out.println("Este historico está vazio");
                         } else {
                             for (MoedaDTO moeda : historico) {
                                 System.out.printf(
@@ -102,7 +95,7 @@ public class Principal {
         } catch (ConnectionApiFailException e) {
             System.out.println("Erro ao se conectar com a API");
         }catch (InputMismatchException e){
-            System.out.println("Erro: Opção invalida!! programa será encerrado.");
+            System.out.println("Erro: o valor digitado é invalido!! programa será encerrado.");
 
         }
 
@@ -125,14 +118,10 @@ public class Principal {
     }
 
     public static boolean moedaValida(String codigo) {
-        for (CodeMoedas moeda : CodeMoedas.values()) {
-            if (moeda.name().equalsIgnoreCase(codigo)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
+       return Arrays.stream(CodeMoedas.values()).noneMatch(moeda -> moeda.name().equalsIgnoreCase(codigo));
+
+    }
 
     private static final String MENU = """
             ********************************************
@@ -144,6 +133,7 @@ public class Principal {
             4) Real Brasileiro => Dolar
             5) Dolar => Peso Colombiano
             6) Peso Colombiano => Dolar
+            
             7) Escolher Moedas para Conversão
             8) Exibir Registro de Conversões
             9) Sair
