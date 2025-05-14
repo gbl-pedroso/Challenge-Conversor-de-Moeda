@@ -55,17 +55,11 @@ Aplicação em Java para conversão de moedas em tempo real, utilizando a API Ex
 
 
 ### Menu Principal
-![Menu principal](https://github.com/seu-usuario/seu-repositorio/raw/main/docs/menu-principal.png).
-
-
-
+![Menu principal](docs/menu-principal.png).
 
 
 ### Exemplo de Conversão: BRL → USD
 ![Conversão BRL para USD](docs/conversao-brl-usd.png)
-
-
-
 
 
 ### Mostrar Historico de Conversões
